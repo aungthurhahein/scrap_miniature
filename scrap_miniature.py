@@ -75,9 +75,8 @@ def read_file_path():
 
 def ParseCommandLine():
     parser = argparse.ArgumentParser('Download daily miniature photos from miniature-calendar.com')
-    parser.add_argument('-t','--today', help='Download today photo')
-    parser.add_argument('-y','--year', help='year')
-    parser.add_argument('-m','--month', help='month')
+    parser.add_argument('-d','--daily', help='Download today photo')
+    parser.add_argument('-m','--monthly', type=int, help='Download for the whole month (yymm) e.g. "1602" for 2016 February')    
     theArgs = parser.parse_args()
     return theArgs
 
@@ -89,6 +88,6 @@ if __name__ == "__main__":
         print "Images are downloading to " + out_folder
         args = ParseCommandLine()
         print args
-        monthly(16,02)
+        # monthly(16,02)
     
     # main(args.website)
