@@ -5,7 +5,7 @@
 # @Author: aungthurhahein
 # @Date:   2016-02-29 11:10:34
 # @Last Modified by:   aungthurhahein
-# @Last Modified time: 2016-03-01 14:18:49
+# @Last Modified time: 2016-03-02 12:44:53
 """
 
 import os
@@ -20,7 +20,6 @@ from urllib import urlretrieve
 baseurl = "http://miniature-calendar.com/"
 # time variable
 local = time.localtime()
-
 # function that scrap src of images
 def get_miniature(url,filename):
     html = urlopen(url).read()
@@ -49,45 +48,64 @@ def monthly(yy,mm):
         file_ = day+"_min.jpg"        
         get_miniature(absurl,file_)
 
-# create flat file with download folder path
-def out_path():
+#create folder and write file path to flat file
+def mkdir_(path):
     out_file = open(".outpath",'w')
-    print "folder path to download images (default:~/Downloads/miniature-calendar/)"
-    file_dir = raw_input("> ")
-    if file_dir == "":
-        os.mkdir(os.path.expanduser("~/Downloads/miniature-calendar/"))
-        out_file.write("~/Downloads/miniature-calendar/")
-    else:        
-        out_file.write(file_dir)
+    if (os.path.isdir(os.path.expanduser(path))):
+        print "Folder already exists"
+        out_file.write(os.path.expanduser(path))
+    else:   
+        os.mkdir(os.path.expanduser(path))
+        out_file.write(os.path.expanduser(path))
     out_file.close()
 
-# read output file location
+# ask user the file path
+def out_path():    
+    print "folder path to download images (default:~/Downloads/miniature-calendar/)"
+    file_dir = raw_input("> ")    
+    if file_dir == "":
+        mkdir_("~/Downloads/miniature-calendar/")        
+    else:
+        mkdir_(file_dir)                
+
+# read and validate output file location
 def read_file_path():
     outpathfile = open('.outpath', 'r')
     file_dir = outpathfile.read()
-    if (os.path.isdir(file_dir)):    
+    if (os.path.isdir(os.path.expanduser(file_dir))):    
         return file_dir
     else:
         print "Invalid file path!"
-        print "Folder created at this path: "+ file_dir
+        print "Folder created at this path: "+ os.path.expanduser(file_dir)
         os.mkdir(os.path.expanduser(file_dir))
         return file_dir
 
 def ParseCommandLine():
-    parser = argparse.ArgumentParser('Download daily miniature photos from miniature-calendar.com')
-    parser.add_argument('-d','--daily', help='Download today photo')
-    parser.add_argument('-m','--monthly', type=int, help='Download for the whole month (yymm) e.g. "1602" for 2016 February')    
+    parser = argparse.ArgumentParser('Download miniature-calendar images.["-d" for today photo.."-m mmyy" to archive photos of entire month.]')
+    parser.add_argument('-d','--daily',action="store_true", help='Download today image')
+    parser.add_argument('-m','--monthly', help='Download for the whole month (mmyy) e.g. "0216" for February 2016')    
     theArgs = parser.parse_args()
     return theArgs
 
 if __name__ == "__main__":
+    # check output filepath
     if os.path.isfile(".outpath") is False:
         out_path()
     else:
-        out_folder = read_file_path()
-        print "Images are downloading to " + out_folder
         args = ParseCommandLine()
-        print args
-        # monthly(16,02)
-    
-    # main(args.website)
+        out_folder = read_file_path()
+        if args.daily:            
+            print "Today image is downloading to " + out_folder
+            daily()
+            print ".........Done........."
+        elif args.monthly:            
+            if len(args.monthly) <4:
+                print "pls make sure you input is in this format:mmyy"
+            else:
+                mm = int(args.monthly[0]+args.monthly[1])
+                yy = int(args.monthly[2]+args.monthly[3])
+                print "Images are downloading to " + out_folder
+                monthly(yy,mm)
+                print ".........Done........."
+        else:
+            print "try again with -h."
