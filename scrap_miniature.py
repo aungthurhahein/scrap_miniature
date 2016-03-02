@@ -5,7 +5,7 @@
 # @Author: aungthurhahein
 # @Date:   2016-02-29 11:10:34
 # @Last Modified by:   aungthurhahein
-# @Last Modified time: 2016-03-02 12:44:53
+# @Last Modified time: 2016-03-02 13:09:26
 """
 
 import os
@@ -22,14 +22,17 @@ baseurl = "http://miniature-calendar.com/"
 local = time.localtime()
 # function that scrap src of images
 def get_miniature(url,filename):
-    html = urlopen(url).read()
-    soup = BeautifulSoup(html, "lxml")
-    outpath = os.path.join(out_folder, filename)
-    # This is the html component we are looking for
-    # <p><img alt="" class="alignnone size-full wp-image-8908" height="1080" src="http://miniature-calendar.com/wp-content/uploads/2016/02/160202tue.jpg" title="Sand shot" width="1080"/></p>    
-    img = soup.find(attrs={"height" : "1080"})    
-    print img["src"]+ " is downloading..."
-    urlretrieve(img["src"], outpath)
+    try:
+        html = urlopen(url).read()
+        soup = BeautifulSoup(html, "lxml")
+        outpath = os.path.join(out_folder, filename)
+        # This is the html component we are looking for
+        # <p><img alt="" class="alignnone size-full wp-image-8908" height="1080" src="http://miniature-calendar.com/wp-content/uploads/2016/02/160202tue.jpg" title="Sand shot" width="1080"/></p>    
+        img = soup.find(attrs={"height" : "1080"})    
+        print img["src"]+ " is downloading..."
+        urlretrieve(img["src"], outpath)
+    except:
+        print "URL don't exist..skip!"
 
 #download today image
 def daily():        
