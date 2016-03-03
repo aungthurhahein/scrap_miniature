@@ -73,7 +73,7 @@ def out_path():
 
 # read and validate output file location
 def read_file_path():
-    outpathfile = open('.outpath', 'r')
+    outpathfile = open(os.path.expanduser(".outpath"), 'r')
     file_dir = outpathfile.read()
     if (os.path.isdir(os.path.expanduser(file_dir))):    
         return file_dir
@@ -90,25 +90,29 @@ def ParseCommandLine():
     theArgs = parser.parse_args()
     return theArgs
 
-if __name__ == "__main__":
-    # check output filepath
-    if os.path.isfile(".outpath") is False:
-        out_path()
-    else:
-        args = ParseCommandLine()
-        out_folder = read_file_path()
-        if args.daily:            
-            print "Today image is downloading to " + out_folder
-            daily()
-            print ".........Done........."
-        elif args.monthly:            
-            if len(args.monthly) <4:
-                print "pls make sure you input is in this format:mmyy"
-            else:
-                mm = int(args.monthly[0]+args.monthly[1])
-                yy = int(args.monthly[2]+args.monthly[3])
-                print "Images are downloading to " + out_folder
-                monthly(yy,mm)
-                print ".........Done........."
+def main(args):
+    out_folder = read_file_path()
+    if args.daily:            
+        print "Today image is downloading to " + out_folder
+        daily()
+        print ".........Done........."
+    elif args.monthly:            
+        if len(args.monthly) <4:
+            print "pls make sure you input is in this format:mmyy"
         else:
-            print "try again with -h."
+            mm = int(args.monthly[0]+args.monthly[1])
+            yy = int(args.monthly[2]+args.monthly[3])
+            print "Images are downloading to " + out_folder
+            monthly(yy,mm)
+            print ".........Done........."
+    else:
+        print "try again with -h."
+
+if __name__ == "__main__":    
+    # check output filepath
+    if os.path.isfile(os.path.expanduser(".outpath")) is False:
+        out_path()
+        print "pls run the program again..."
+    else:
+        args = ParseCommandLine()        
+        main(args)

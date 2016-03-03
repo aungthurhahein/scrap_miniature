@@ -14,7 +14,7 @@ The following Python libraries are required to install at your machine:
 
 # Usage
 
-At the very first run, the script ask the folder location to store the images. Later on, the images will download to this location automatically. If you wanna change the download folder location, just delete ".outpath" file and run the script again.
+At the very first run, the script ask the folder location to store the images. Later on, the images will download to this location automatically. If you wanna change the download folder location, just delete ".outpath" file at your home directory and run the script again.
 
 There are 2 options to retireve images which are
 
@@ -39,7 +39,7 @@ Use [cron](http://www.cyberciti.biz/faq/linux-when-does-cron-daily-weekly-monthl
 
 # Issues
 
-It is tested *a bit* on Debian linux system. You can kill bugs yourself.
+It is tested *a bit* on Debian linux system. You can kill bugs yourself. 
 
 # License
 The project is licensed under [dbad](http://www.dbad-license.org/).
