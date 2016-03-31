@@ -5,7 +5,7 @@
 # @Author: aungthurhahein
 # @Date:   2016-02-29 11:10:34
 # @Last Modified by:   aungthurhahein
-# @Last Modified time: 2016-03-02 13:09:26
+# @Last Modified time: 2016-03-31 15:56:07
 """
 
 import os
@@ -20,9 +20,12 @@ from urllib import urlretrieve
 baseurl = "http://miniature-calendar.com/"
 # time variable
 local = time.localtime()
+out_folder =""
+
 # function that scrap src of images
 def get_miniature(url,filename):
     try:
+        out_folder = read_file_path()
         html = urlopen(url).read()
         soup = BeautifulSoup(html, "lxml")
         outpath = os.path.join(out_folder, filename)
@@ -30,8 +33,9 @@ def get_miniature(url,filename):
         # <p><img alt="" class="alignnone size-full wp-image-8908" height="1080" src="http://miniature-calendar.com/wp-content/uploads/2016/02/160202tue.jpg" title="Sand shot" width="1080"/></p>    
         img = soup.find(attrs={"height" : "1080"})    
         print img["src"]+ " is downloading..."
+        print img["src"],outpath
         urlretrieve(img["src"], outpath)
-    except:
+    except:        
         print "URL don't exist..skip!"
 
 #download today image
